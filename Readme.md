@@ -4,7 +4,8 @@
 - Timelimit - 1hr
 
 ## Questions
-![Question.pdf](Question-image.png)
+- [Question PDF](Question.pdf)
+- ![Question.pdf](Question-image.png)
 
 # Overall Review
 Pretty solid test. Could have done better. Also, I found it haliraious that I couldn't remember inbuilt function syntax and also basic function decleration. What a dumbasssss 🤦‍♂️🤦‍♂️🤦‍♂️🤦‍♂️🤦‍♂️. 
@@ -21,7 +22,7 @@ Pretty solid test. Could have done better. Also, I found it haliraious that I co
 # Solutions
 
 ## Q1. Palindrome
-- My thought process to sanitize the string .i.e remove all possible spaces and punctuations.
+- My thought process was to sanitize the string .i.e remove all possible spaces and punctuations.
 - Then use a 2 pointer check to check if palindrome.
 
 ### My Initial solution
