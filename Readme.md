@@ -4,7 +4,6 @@
 - Timelimit - 1hr
 
 ## Questions
-- [Question PDF](Question.pdf)
 ![Question.pdf](Question-image.png)
 
 # Overall Review
@@ -26,9 +25,10 @@ Pretty solid test. Could have done better. Also, I found it haliraious that I co
 - Then use a 2 pointer check to check if palindrome.
 
 ### My Initial solution
-```
+
+```php
 function checkPalindrome(string $str){
-    $str = strtoloer($str);
+    $str = strtolower($str);
     $str = sanitizeString($str);
 
     $strLength = strlen($str);
@@ -36,12 +36,12 @@ function checkPalindrome(string $str){
     $lastPointer = $strLength - 1;
     $mid =  $strLength / 2;
 
-    for($firstPointer=0; $firstPointer < $mid; $firstPointer++, $lastPointer--){
+    for($firstPointer = 0; $firstPointer < $mid; $firstPointer++, $lastPointer--){
         if($str[$firstPointer] !== $str[$lastPointer]){
             return false;
         }
     }
-    
+
     return true;
 }
 
@@ -64,20 +64,17 @@ function sanitizeString(string $str){
 
 ### My updated solution would be
 - turn string to lowercase
-- compare with ascii value to filter out chars
+- compare with ASCII value to filter out chars
 - make temp string, reverse it, and then compare it to original.
 
-```
+```php
 function checkPalindrome(string $str): bool {
-    // Convert to lowercase
     $str = strtolower($str);
     $cleanStr = '';
     
-    // ASCII values for a-z
     $minAscii = ord('a');
     $maxAscii = ord('z');
     
-    // Build clean string with only a-z characters
     for ($i = 0; $i < strlen($str); $i++) {
         $charAscii = ord($str[$i]);
         if ($charAscii >= $minAscii && $charAscii <= $maxAscii) {
@@ -85,26 +82,36 @@ function checkPalindrome(string $str): bool {
         }
     }
     
-    // Check if clean string is a palindrome
     return $cleanStr === strrev($cleanStr);
 }
 ```
+### Deepseek solution
 
+```php
+function isPalindrome(string $input): bool {
+    // Normalize: lowercase and remove non-alphanumeric characters
+    $cleaned = preg_replace('/[^a-z0-9]/', '', strtolower($input));
+    
+    // Edge case: empty string after cleaning
+    if ($cleaned === '') return false;
+    
+    // Compare with reversed string (most efficient way)
+    return $cleaned === strrev($cleaned);
+}
+```
 ## Q2. DigitSum
 - This was pretty simple, I immediately knew that this was a case for recursion.
 
-```
-<?php
-
+```php
 function digitSum(int $num){
-    if(str_to_lenght((string)$num) === 1){
+    if(strlen((string)$num) === 1){
         return $num
     }
 
     $sum = 0;
 
     foreach($num as $char){
-        $sum = $sum+$char;
+        $sum = $sum + (int) $char;
     }
 
     return digitSum($sum);
@@ -112,36 +119,49 @@ function digitSum(int $num){
 
 ```
 
+### Deepseek Solution
+
+```php
+function digitSum(int $num): int {
+    $num = abs($num); // Handle negative numbers
+    if (strlen((string)$num) === 1) {
+        return $num;
+    }
+
+    $sum = 0;
+    foreach (str_split((string)$num) as $char) {
+        $sum += (int)$char; // Cast char to int before adding
+    }
+
+    return digitSum($sum); // Recursively sum until single digit
+}
+```
 
 ## Q3. Bracket Sequence
 - I knew I could solve this one, this is a Leetcode easy problem that I had solved in the past. But I didn't rememeber remember the flow. So I doodled some cases and realized that this< needed to be solved using stack. I could have solved this properly if I gave more time to this, but heres what I basically wrote.
 
 ### My Initial Solution
-```
-<?php
-
-function checkSequenece(string $sequence): bool{
+```php
+//Definitely wrong.
+function checkSequence(string $sequence): bool {
     $stack = [];
-    $pairmap = [
-        "{"=>"}",
-        "}"=>"{",
-        "("=>")",
-        ")"=>"(",
-        "["=>"]",
-        "]"=>"["
+    $pairMap = [
+        "{" => "}",
+        "(" => ")",
+        "[" => "]",
+        "}" => "{",
+        ")" => "(",
+        "]" => "["
     ];
 
-    foreach($sequence as $bracket){
-        if(canPush($bracket, $stack, $pairmap)){
+    foreach (str_split($sequence) as $bracket) {
+        if (canPush($bracket, $stack, $pairMap)) {
             $stack[] = $bracket;
             continue;
         }
 
-        $lastIndex = count($stack) - 1;
-
-        if(canPop($bracket, $stack, $pairmap)){
-            unset($stack[$lastIndex]);
-
+        if (canPop($bracket, $stack, $pairMap)) {
+            array_pop($stack);
             continue;
         }
     }
@@ -149,36 +169,32 @@ function checkSequenece(string $sequence): bool{
     return empty($stack);
 }
 
-
-function canPush($bracket, $stack, $pairmap){
-    if(empty($stack)){
+function canPush(string $bracket, array $stack, array $pairMap): bool {
+    if (empty($stack)) {
         return true;
     }
 
-    if(in_array($bracket, $stack)){
-        return false;
-    }
-
     $lastIndex = count($stack) - 1;
-
-    return $bracket ===  $pairmap[$stack[$lastIndex]];
-}
-
-function canPop($bracket, $stack, $pairmap){
-    if(empty($stack)){
-        return false;
-    }
+    $lastBracket = $stack[$lastIndex];
     
-    $lastIndex = count($stack) - 1;
-
-    return $bracket !==  $pairmap[$stack[$lastIndex]];
+    return isset($pairMap[$lastBracket]) && $bracket === $pairMap[$lastBracket];
 }
 
+function canPop(string $bracket, array $stack, array $pairMap): bool {
+    if (empty($stack)) {
+        return false;
+    }
+
+    $lastIndex = count($stack) - 1;
+    $lastBracket = $stack[$lastIndex];
+    
+    return isset($pairMap[$bracket]) && $pairMap[$bracket] === $lastBracket;
+}
 ```
 
 ### My updated soultion would be:
 
-```
+```js
 var isValid = function(s) {
     const stack      = [];
     const bracketMap = {
@@ -214,11 +230,40 @@ var isValid = function(s) {
     }
 };
 ``` 
+### Deepseek solution
+
+```php
+function isValid(string $s): bool {
+    $stack = [];
+    $bracketMap = [
+        ')' => '(',
+        '}' => '{',
+        ']' => '['
+    ];
+
+    for ($i = 0; $i < strlen($s); $i++) {
+        $char = $s[$i];
+        
+        if (array_key_exists($char, $bracketMap)) {
+            // Closing bracket: check if top of stack matches
+            if (array_pop($stack) !== $bracketMap[$char]) {
+                return false;
+            }
+        } else {
+            // Opening bracket: push to stack
+            array_push($stack, $char);
+        }
+    }
+
+    return empty($stack);
+}
+```
 ## Q4. File path
 
 - I didn't even try this because I did not understand the question.
 
 ---
+
 
 >[!NOTE]
 > For all sql queries I used CTEs because I personally like writing CTE's instead of subquery because of their readibility and usability. I basically wrote or tried writing these queries
