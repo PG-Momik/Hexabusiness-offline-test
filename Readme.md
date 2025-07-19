@@ -139,7 +139,7 @@ function digitSum(int $num): int {
 ```
 
 ## Q3. Bracket Sequence
-- I knew I could solve this one, this is a Leetcode easy problem that I had solved in the past. But I didn't rememeber remember the flow. So I doodled some cases and realized that this< needed to be solved using stack. I could have solved this properly if I gave more time to this, but heres what I basically wrote.
+- I knew I could solve this one, this is a Leetcode easy problem that I had solved in the past. But I didn't rememeber the flow. So I doodled some cases and realized that this< needed to be solved using a stack. I could have solved this properly if I had given it more time, but here's what I wrote.
 
 ### My Initial Solution
 ```php
